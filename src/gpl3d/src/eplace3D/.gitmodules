@@ -1,0 +1,6 @@
+[submodule "Eigen"]
+	path = Eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "Plot/CImg"]
+	path = Plot/CImg
+	url = https://github.com/GreycLab/CImg.git
