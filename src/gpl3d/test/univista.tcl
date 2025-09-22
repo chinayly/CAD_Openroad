@@ -1,23 +1,34 @@
 # set technology information
 set ALL_LEFS {
-    /home/TritonPart/TD_3D/test/Nangate45/Nangate45_tech.lef
-    /home/testcase/iccad2015.ot/superblue1/superblue1.lef
+    /home/testcase/pdk/lef/NangateOpenCellLibrary.tech.lef
+    /home/testcase/pdk/lef/NangateOpenCellLibrary.macro.mod.lef
+    /home/testcase/pdk/lef/fakeram45_32x64.lef
+    /home/testcase/pdk/lef/fakeram45_64x7.lef
+    /home/testcase/pdk/lef/fakeram45_64x96.lef
+    /home/testcase/pdk/lef/fakeram45_256x96.lef
+    /home/testcase/pdk/lef/fakeram45_512x64.lef
+
 }
 set ALL_DEFS {
-    /home/testcase/iccad2015.ot/superblue1/superblue1.def
+    /home/testcase/Public/public_case1/input.def
 }
 set EARLY_LIBS {
-    /home/testcase/iccad2015.ot/superblue1/superblue1.lib
+    /home/testcase/pdk/lib/NangateOpenCellLibrary_typical.lib
+    
 }
 set LATE_LIBS {
-    /home/testcase/iccad2015.ot/superblue1/superblue1_Late.lib
+    /home/testcase/pdk/lib/NangateOpenCellLibrary_typical.lib
+    /home/testcase/pdk/lib/fakeram45_64x96.lib
+    /home/testcase/pdk/lib/fakeram45_256x96.lib
+    /home/testcase/pdk/lib/fakeram45_512x64.lib
+    /home/testcase/pdk/lib/fakeram45_64x7.lib
 }
 # /home/testcase/iccad2015.ot/superblue1/superblue1_Early.lib
 # set design information
-set design "superblue1"
-set top_design "superblue1"
-set netlist "/home/testcase/iccad2015.ot/superblue1/superblue1.v"
-set sdc "/home/testcase/iccad2015.ot/superblue1/superblue1.sdc" 
+set design "top"
+set top_design "top"
+set netlist "/home/testcase/Public/public_case1/input.v"
+set sdc "/home/testcase/Public/public_case1/input.sdc" 
 
 # proc set_all_input_output_delays {{clk_period_factor .2}} {
 #   set clk [lindex [all_clocks] 0]

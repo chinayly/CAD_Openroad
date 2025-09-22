@@ -1,22 +1,24 @@
 # set technology information
 set ALL_LEFS {
-    /home/testcase/iccad2015.ot/superblue1/superblue1.lef
+    /home/TritonPart/TD_3D/test/Nangate45/Nangate45_tech.lef
+    /home/TritonPart/TD_3D/test/Nangate45/Nangate45_stdcell.lef
 }
-set ALL_DEFS {
-    /home/testcase/iccad2015.ot/simple/simple_QQ.def
-}
+#set ALL_DEFS {
+#    /home/testcase/iccad2015.ot/simple/simple_QQ.def
+#}
+
 set EARLY_LIBS {
-    /home/testcase/iccad2015.ot/simple/simple_Early.lib
+    /home/TritonPart/TD_3D/test/Nangate45/Nangate45_typ.lib
 }
 set LATE_LIBS {
-    /home/testcase/iccad2015.ot/simple/simple_Late.lib
+    /home/TritonPart/TD_3D/test/Nangate45/Nangate45_typ.lib
 }
 # /home/testcase/iccad2015.ot/superblue1/superblue1_Early.lib
 # set design information
-set design "simple"
-set top_design "simple"
-set netlist "/home/testcase/iccad2015.ot/simple/simple.v"
-set sdc "/home/testcase/iccad2015.ot/simple/simple.sdc" 
+set design "aes_cipher_top"
+set top_design "aes_cipher_top"
+set netlist "/home/TritonPart/TD_3D/test/aes_nangate45.v"
+set sdc "/home/TritonPart/TD_3D/test/aes_nangate45.sdc" 
 
 # proc set_all_input_output_delays {{clk_period_factor .2}} {
 #   set clk [lindex [all_clocks] 0]
@@ -46,6 +48,8 @@ link_design $top_design
 
 puts "Design linked"
 
+source /home/TritonPart/TD_3D/test/flow_helpers.tcl
+
 read_sdc $sdc
 
 ##############################################################################################
@@ -67,4 +71,5 @@ set_debug_level STA "search" 2
 
 # call triton_part to partition the netlist
 
-placer3d_run -solution_file "/home/TritonPart/TD_3D/src/gpl3d/test/${design}_placer3d_solution.txt"
+gpl3d::import_place_db
+gpl3d::placer3d_run

@@ -1,13 +1,13 @@
 
 
 sta::define_cmd_args "placer3d_run" {
-    -solution_file {solution_file ""}
+    -argc argcount
 }
 proc placer3d_run {args} {
     sta::parse_key_args "placer3d_run" args \
-    keys {-solution_file} \
+    keys {-argc} \
     flags {}
 
-    set solution_file $keys(-solution_file)
-    gpl3d::placer3d_run $solution_file
+    set argcount $keys(-argc)
+    gpl3d::placer3d_run $argcount
 }
