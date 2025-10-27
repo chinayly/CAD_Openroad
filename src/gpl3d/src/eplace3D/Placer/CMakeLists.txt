@@ -2,7 +2,12 @@ find_package(OpenMP REQUIRED)
 
 add_library(Placer spaceplacer.cpp tierplacer.cpp mesh.cpp)
 target_link_libraries(
-    Placer PUBLIC PlaceDB PlaceCommon Optimization FFT Plot CTS OpenMP::OpenMP_CXX
+    Placer PUBLIC PlaceDB PlaceCommon Optimization FFT Plot CTS OpenMP::OpenMP_CXX gpl3d_td
+)
+target_include_directories(Placer
+  PUBLIC
+  /home/TritonPart/TD_3D/src/gpl3d/include/td
+    
 )
 
 # add_executable(MeshTest mesh_test.cpp)

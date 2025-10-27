@@ -17,6 +17,10 @@ add_subdirectory(src/eplace3D/FFT           )
 add_subdirectory(src/eplace3D/Plot          )
 #add_subdirectory(src/eplace3D/Eigen        )
 add_subdirectory(src/eplace3D/CTS           )
+<<<<<<< HEAD
+=======
+add_subdirectory(src/td)
+>>>>>>> daaadde10f (wrong timing)
 
 
 # 3) 我们自己的 gpl3d 核心库
@@ -59,6 +63,7 @@ target_link_libraries(gpl3d_lib
     Plot
     #Eigen
     CTS
+    gpl3d_td
 )
 
 # 6) 生成 SWIG/Tcl 插件
