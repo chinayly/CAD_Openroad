@@ -167,7 +167,7 @@ proc timing_iter_and_feedback {{tag ""}} {
 puts "Start placer3d"
 
 # Debug 开关
-set_debug_level GPL3D "run" 1
+set_debug_level GPL3D "run" 0
 set_debug_level PAR "initial_partitioning" 1
 set_debug_level PAR "multilevel_partitioning" 1
 set_debug_level PAR "v_cycle_refinement" 1

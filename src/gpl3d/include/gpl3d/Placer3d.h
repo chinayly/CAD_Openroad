@@ -35,6 +35,7 @@ class Placer3d
   sta::dbNetwork* db_network_ = nullptr;
   sta::dbSta* sta_ = nullptr;
   utl::Logger* logger_ = nullptr;
+  
 };
 
 }  // namespace gpl3d

@@ -1,0 +1,510 @@
+OpenROAD 0454d5d542227115003c48e9718ce43cb386dff3 
+Features included (+) or not (-): +GPU +GUI +Python : Debug
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-0345] time scale 1e-09 does not match library scale 1e+00.
+[WARNING STA-0345] capacitance scale 1e-15 does not match library scale 1e+00.
+[WARNING STA-0345] resistance scale 1e+03 does not match library scale 1e+00.
+[WARNING STA-0345] current scale 1e-03 does not match library scale 1e+00.
+[WARNING STA-0345] distance scale 1e-06 does not match library scale 1e+00.
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/NangateOpenCellLibrary.tech.lef, created 22 layers, 27 vias
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/NangateOpenCellLibrary.macro.mod.lef, created 135 library cells
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/fakeram45_32x64.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/fakeram45_64x7.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/fakeram45_64x96.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/fakeram45_256x96.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /home/testcase/pdk/lef/fakeram45_512x64.lef, created 1 library cells
+[INFO ODB-0127] Reading DEF file: /home/testcase/Public/public_case1/input.def
+[INFO ODB-0128] Design: top
+[INFO ODB-0097] 		Created 100000 Nets
+[INFO ODB-0130]     Created 1453 pins.
+[INFO ODB-0131]     Created 84546 components and 457750 component-terminals.
+[INFO ODB-0133]     Created 101061 nets and 288658 connections.
+[INFO ODB-0134] Finished DEF file: /home/testcase/Public/public_case1/input.def
+[INFO ORD-0030] Using 8 thread(s).
+Start placer3d
+[Summary] Modules: FIXED=0, FREE=84546
+== 16:30:39 TIMING+FEEDBACK PRE ==
+FATAL: gpl3d::td::timing_iteration not found. Did you call TimingOracle::registerTcl(interp)?
+[INFO GPL3D-0000] Begin running ePlace3D...
+[Summary] Modules: FIXED=0, FREE=84546
+[Check] PlaceDB summary: modules=84546, nets=101061, rows=499
+TSV size: 1.400000
+
+======Convert to 3D database======
+before:
+numRows:499	commonRowHeight:1.400000
+coreRegionArea:488859.311279
+areaExpandFactor:1.000000
+after:
+numTiers:2
+numRowsPerTier:353	commonRowHeight:1.400000
+rowWidth:495.000000,siteWidth:0.190000
+Set core region from site info: lower left: (0,0) to upper right: (495,494.2)
+Set core region from site info: lower left: (0,0) to upper right: (495,494.2)
+=== Start SpacePlacer Initialization ===
+WirelengthScaleZ: 1.040065
+CoreCube:
+llf pos: (0,0,0)
+urb pos: (495,494.2,494.2)
+
+Total module area:314568.684258
+Macro count:14, TSV count:0, Terminals: 0, Flipflops: 0, Standard cell count:84532
+macro count:14, totalMacroArea:182398.341431, totalTierArea:489258.000000
+macroratio: 0.37     ratio constraint: 0.42
+filler:
+totalTierArea:489258.000000
+totalFillerArea:125763.504077	fillerNum:80434
+
+fillerWidth:1.116824	fillerHeight:1.400000
+
+Free Nodes Initialization Finished, freeNodesArea: 440331.581010
+total bins: 347682, avgCellVolume: 386.354185, targetDensity: 0.900000, volumeR: 120895656.000000
+Stored 64 x 64 x 64 bins
+Bins Updated Based on CoreCube: 64 (X) * 64 (Y) * 64 (Z) = 262144 total bins
+ Gradient Initialization Finished
+Initial penalty factor:0.000035
+
+=== Finish SpacePlacer Initialization ===
+length: 494940
+=== Start place optimization ===
+iter:0
+penalty factor:0.0000353040646710
+total hpwl:219710.294497
+density overflow:0.686731
+Density Gradient Time: 0.376961, Wirelength Gradient Time: 0.430409
+stepSize : 1.000000
+
+iter:1
+penalty factor:0.0000388569111890
+total hpwl:217588.957084
+density overflow:0.686731
+Density Gradient Time: 0.314795, Wirelength Gradient Time: 0.421885
+stepSize : 5.912378
+
+iter:2
+penalty factor:0.0000428660085141
+total hpwl:207001.818367
+density overflow:0.685661
+Density Gradient Time: 0.317383, Wirelength Gradient Time: 0.421933
+stepSize : 9.565907
+
+iter:3
+penalty factor:0.0000467608702706
+total hpwl:237637.690871
+density overflow:0.682674
+Density Gradient Time: 0.307764, Wirelength Gradient Time: 0.425705
+stepSize : 14.273406
+
+iter:4
+penalty factor:0.0000494474686658
+total hpwl:382492.325146
+density overflow:0.675454
+Density Gradient Time: 0.302127, Wirelength Gradient Time: 0.420308
+stepSize : 11.178660
+
+iter:5
+penalty factor:0.0000483172113851
+total hpwl:817405.177750
+density overflow:0.601465
+Density Gradient Time: 0.284088, Wirelength Gradient Time: 0.438163
+stepSize : 21.378173
+
+iter:6
+penalty factor:0.0000483756959659
+total hpwl:1162962.901460
+density overflow:0.580087
+Density Gradient Time: 0.295024, Wirelength Gradient Time: 0.429525
+stepSize : 30.828400
+
+iter:7
+penalty factor:0.0000496960266563
+total hpwl:1414079.384037
+density overflow:0.580845
+Density Gradient Time: 0.273871, Wirelength Gradient Time: 0.488523
+stepSize : 27.724088
+
+iter:8
+penalty factor:0.0000489668520075
+total hpwl:1818359.958718
+density overflow:0.563797
+Density Gradient Time: 0.281651, Wirelength Gradient Time: 0.423971
+stepSize : 17.745546
+
+iter:9
+penalty factor:0.0000558820801936
+total hpwl:1683258.963451
+density overflow:0.543135
+Density Gradient Time: 0.276496, Wirelength Gradient Time: 0.423857
+stepSize : 14.256451
+
+iter:10
+penalty factor:0.0000639456577335
+total hpwl:1538280.852620
+density overflow:0.532016
+Density Gradient Time: 0.271871, Wirelength Gradient Time: 0.429367
+stepSize : 12.622654
+
+iter:11
+penalty factor:0.0000728583863693
+total hpwl:1409114.755731
+density overflow:0.526384
+Density Gradient Time: 0.276360, Wirelength Gradient Time: 0.428593
+stepSize : 12.078222
+
+iter:12
+penalty factor:0.0000812327507968
+total hpwl:1359574.015832
+density overflow:0.524501
+Density Gradient Time: 0.269996, Wirelength Gradient Time: 0.423688
+stepSize : 12.149289
+
+iter:13
+penalty factor:0.0000891391433276
+total hpwl:1368497.965387
+density overflow:0.511835
+Density Gradient Time: 0.288474, Wirelength Gradient Time: 0.427415
+stepSize : 11.612658
+
+iter:14
+penalty factor:0.0000980598883424
+total hpwl:1368242.155949
+density overflow:0.498351
+Density Gradient Time: 0.268664, Wirelength Gradient Time: 0.423470
+stepSize : 10.408710
+
+iter:15
+penalty factor:0.0001073672108203
+total hpwl:1385258.276755
+density overflow:0.476890
+Density Gradient Time: 0.267356, Wirelength Gradient Time: 0.424514
+stepSize : 9.209810
+
+iter:16
+penalty factor:0.0001185697353768
+total hpwl:1370803.476481
+density overflow:0.455848
+Density Gradient Time: 0.269394, Wirelength Gradient Time: 0.445762
+stepSize : 8.446826
+
+iter:17
+penalty factor:0.0001303390556048
+total hpwl:1373272.223074
+density overflow:0.444643
+Density Gradient Time: 0.285386, Wirelength Gradient Time: 0.428050
+stepSize : 8.011689
+
+iter:18
+penalty factor:0.0001435913522720
+total hpwl:1367682.814041
+density overflow:0.430626
+Density Gradient Time: 0.283202, Wirelength Gradient Time: 0.426649
+stepSize : 7.600265
+
+iter:19
+penalty factor:0.0001576301910269
+total hpwl:1375137.007332
+density overflow:0.418635
+Density Gradient Time: 0.269896, Wirelength Gradient Time: 0.423473
+stepSize : 7.198476
+
+iter:20
+penalty factor:0.0001740769049287
+total hpwl:1360685.800071
+density overflow:0.408093
+Density Gradient Time: 0.269723, Wirelength Gradient Time: 0.431586
+stepSize : 6.874733
+
+iter:21
+penalty factor:0.0001918239199972
+total hpwl:1354184.118257
+density overflow:0.402449
+Density Gradient Time: 0.270508, Wirelength Gradient Time: 0.423491
+stepSize : 6.681988
+
+iter:22
+penalty factor:0.0002114156720334
+total hpwl:1347066.776538
+density overflow:0.397442
+Density Gradient Time: 0.270532, Wirelength Gradient Time: 0.424008
+stepSize : 6.520472
+
+iter:23
+penalty factor:0.0002319421268104
+total hpwl:1356792.644740
+density overflow:0.390389
+Density Gradient Time: 0.268424, Wirelength Gradient Time: 0.423113
+stepSize : 6.312997
+
+iter:24
+penalty factor:0.0002548750597507
+total hpwl:1360555.215208
+density overflow:0.383157
+Density Gradient Time: 0.273907, Wirelength Gradient Time: 0.423490
+stepSize : 6.062628
+
+iter:25
+penalty factor:0.0002795933224999
+total hpwl:1370644.697652
+density overflow:0.374987
+Density Gradient Time: 0.270790, Wirelength Gradient Time: 0.423324
+stepSize : 5.831147
+
+iter:26
+penalty factor:0.0003071882726830
+total hpwl:1374998.048495
+density overflow:0.368074
+Density Gradient Time: 0.268313, Wirelength Gradient Time: 0.423191
+stepSize : 5.615428
+
+iter:27
+penalty factor:0.0003370127079652
+total hpwl:1384730.779723
+density overflow:0.359765
+Density Gradient Time: 0.269816, Wirelength Gradient Time: 0.423767
+stepSize : 5.419660
+
+iter:28
+penalty factor:0.0003703211008244
+total hpwl:1388624.615808
+density overflow:0.354059
+Density Gradient Time: 0.269437, Wirelength Gradient Time: 0.423683
+stepSize : 5.273500
+
+iter:29
+penalty factor:0.0004064211765272
+total hpwl:1397036.375487
+density overflow:0.349874
+Density Gradient Time: 0.270282, Wirelength Gradient Time: 0.423024
+stepSize : 5.163413
+
+iter:30
+penalty factor:0.0004457163498901
+total hpwl:1408117.005009
+density overflow:0.345777
+Density Gradient Time: 0.271156, Wirelength Gradient Time: 0.424965
+stepSize : 5.064216
+
+iter:31
+penalty factor:0.0004884140353919
+total hpwl:1422179.639123
+density overflow:0.341423
+Density Gradient Time: 0.271447, Wirelength Gradient Time: 0.423968
+stepSize : 4.942859
+
+iter:32
+penalty factor:0.0005349904364271
+total hpwl:1437693.993214
+density overflow:0.335188
+Density Gradient Time: 0.274751, Wirelength Gradient Time: 0.437768
+stepSize : 4.824291
+
+iter:33
+penalty factor:0.0005867296360175
+total hpwl:1448692.010893
+density overflow:0.331694
+Density Gradient Time: 0.279052, Wirelength Gradient Time: 0.427827
+stepSize : 4.721956
+
+iter:34
+penalty factor:0.0006433096501563
+total hpwl:1460619.854004
+density overflow:0.326136
+Density Gradient Time: 0.269571, Wirelength Gradient Time: 0.435128
+stepSize : 4.637669
+
+iter:35
+penalty factor:0.0007054554796013
+total hpwl:1471976.910543
+density overflow:0.323605
+Density Gradient Time: 0.269102, Wirelength Gradient Time: 0.429647
+stepSize : 4.576675
+
+iter:36
+penalty factor:0.0007732350143611
+total hpwl:1485089.723578
+density overflow:0.319294
+Density Gradient Time: 0.271073, Wirelength Gradient Time: 0.437366
+stepSize : 4.505518
+
+iter:37
+penalty factor:0.0008473689684454
+total hpwl:1498886.231599
+density overflow:0.314882
+Density Gradient Time: 0.270109, Wirelength Gradient Time: 0.427902
+stepSize : 4.419583
+
+iter:38
+penalty factor:0.0009294959180564
+total hpwl:1509183.071886
+density overflow:0.309320
+Density Gradient Time: 0.269906, Wirelength Gradient Time: 0.435654
+stepSize : 4.322137
+
+iter:39
+penalty factor:0.0010201778239247
+total hpwl:1517336.749720
+density overflow:0.303840
+Density Gradient Time: 0.284909, Wirelength Gradient Time: 0.427659
+stepSize : 4.243184
+
+iter:40
+penalty factor:0.0011209504295202
+total hpwl:1521413.670443
+density overflow:0.299750
+Density Gradient Time: 0.268662, Wirelength Gradient Time: 0.428600
+stepSize : 4.164043
+
+iter:41
+penalty factor:0.0012304451660383
+total hpwl:1529166.005358
+density overflow:0.292801
+Density Gradient Time: 0.267544, Wirelength Gradient Time: 0.427394
+stepSize : 4.081270
+
+iter:42
+penalty factor:0.0013521190389705
+total hpwl:1532886.651463
+density overflow:0.288959
+Density Gradient Time: 0.272890, Wirelength Gradient Time: 0.434176
+stepSize : 4.012874
+
+iter:43
+penalty factor:0.0014855781154132
+total hpwl:1537216.935102
+density overflow:0.284510
+Density Gradient Time: 0.269242, Wirelength Gradient Time: 0.427985
+stepSize : 3.936809
+
+iter:44
+penalty factor:0.0016313548975858
+total hpwl:1543471.771627
+density overflow:0.279427
+Density Gradient Time: 0.270272, Wirelength Gradient Time: 0.428798
+stepSize : 3.867744
+
+iter:45
+penalty factor:0.0017925669657452
+total hpwl:1547409.946173
+density overflow:0.276127
+Density Gradient Time: 0.269455, Wirelength Gradient Time: 0.427434
+stepSize : 3.803103
+
+iter:46
+penalty factor:0.0019679503610421
+total hpwl:1554630.472533
+density overflow:0.271118
+Density Gradient Time: 0.267393, Wirelength Gradient Time: 0.427781
+stepSize : 3.724547
+
+iter:47
+penalty factor:0.0021606528967568
+total hpwl:1561579.459635
+density overflow:0.266441
+Density Gradient Time: 0.267794, Wirelength Gradient Time: 0.428121
+stepSize : 3.641468
+
+iter:48
+penalty factor:0.0023732877461393
+total hpwl:1566883.594272
+density overflow:0.261448
+Density Gradient Time: 0.268755, Wirelength Gradient Time: 0.427224
+stepSize : 3.562684
+
+iter:49
+penalty factor:0.0026082801237382
+total hpwl:1570171.555796
+density overflow:0.257353
+Density Gradient Time: 0.268570, Wirelength Gradient Time: 0.428547
+stepSize : 3.495393
+
+iter:50
+penalty factor:0.0028662947732269
+total hpwl:1573774.193647
+density overflow:0.252727
+Density Gradient Time: 0.271095, Wirelength Gradient Time: 0.434080
+stepSize : 3.444602
+
+iter:51
+penalty factor:0.0031504722296545
+total hpwl:1576631.180980
+density overflow:0.247448
+Density Gradient Time: 0.269544, Wirelength Gradient Time: 0.436678
+stepSize : 3.395168
+
+iter:52
+penalty factor:0.0034650338470190
+total hpwl:1577145.786608
+density overflow:0.240662
+Density Gradient Time: 0.282037, Wirelength Gradient Time: 0.452030
+stepSize : 3.379693
+
+iter:53
+penalty factor:0.0038159858054289
+total hpwl:1572862.313318
+density overflow:0.234717
+Density Gradient Time: 0.278852, Wirelength Gradient Time: 0.439027
+stepSize : 3.384132
+
+iter:54
+penalty factor:0.0041940097420156
+total hpwl:1575990.892120
+density overflow:0.228344
+Density Gradient Time: 0.270075, Wirelength Gradient Time: 0.443894
+stepSize : 3.432243
+
+iter:55
+penalty factor:0.0046293499153627
+total hpwl:1563325.344486
+density overflow:0.222543
+Density Gradient Time: 0.272461, Wirelength Gradient Time: 0.437977
+stepSize : 3.578059
+
+iter:56
+penalty factor:0.0051008167000049
+total hpwl:1557177.925493
+density overflow:0.218605
+Density Gradient Time: 0.269392, Wirelength Gradient Time: 0.438022
+stepSize : 3.731363
+
+iter:57
+penalty factor:0.0056049375215153
+total hpwl:1561081.255131
+density overflow:0.213641
+Density Gradient Time: 0.271462, Wirelength Gradient Time: 0.438432
+stepSize : 3.929620
+
+iter:58
+penalty factor:0.0061723178819741
+total hpwl:1556981.780132
+density overflow:0.209210
+Density Gradient Time: 0.270673, Wirelength Gradient Time: 0.443615
+stepSize : 4.186335
+
+iter:59
+penalty factor:0.0067922090392210
+total hpwl:1555543.705729
+density overflow:0.204834
+Density Gradient Time: 0.270879, Wirelength Gradient Time: 0.437358
+stepSize : 4.551154
+
+iter:60
+penalty factor:0.0074440657640439
+total hpwl:1569017.936190
+density overflow:0.201318
+Density Gradient Time: 0.271138, Wirelength Gradient Time: 0.442776
+stepSize : 4.896206
+
+iter:61
+penalty factor:0.0081481909655855
+total hpwl:1587127.190103
+density overflow:0.197809
+Density Gradient Time: 0.282619, Wirelength Gradient Time: 0.448345
+stepSize : 5.310592
+
+iter:62
+penalty factor:0.0089056913451312
+total hpwl:1610686.562117
+density overflow:0.193752
+Density Gradient Time: 0.276848, Wirelength Gradient Time: 0.448566
+st

@@ -9,11 +9,7 @@
 #include "mmm.h"
 #include "topology.h"
 #include "DME.h"
-<<<<<<< HEAD
-
-=======
 #include "td/TimingManager.h"
->>>>>>> daaadde10f (wrong timing)
 TierPlacer::TierPlacer(PlaceDB *db, unordered_map<Module *, ModulePosition> &&position, double targetDensity)
     : targetDensity(targetDensity), modulePosition(position), db(db)
 {
@@ -110,15 +106,12 @@ vector<double *> TierPlacer::getParams()
     return params;
 }
 
-<<<<<<< HEAD
-=======
 
 void TierPlacer::setTiming(gpl3d::td::TimingManager* tm, int k_timing)
 {
     timing_   = tm;
     k_timing_ = (k_timing > 0 ? k_timing : 15);
 }
->>>>>>> daaadde10f (wrong timing)
 // calculate the total gradient with preconditioning
 vector<double> TierPlacer::getGradient()
 {
@@ -230,12 +223,8 @@ double TierPlacer::totalHPWL()
     double hpwl = 0;
     for (Net *net : db->dbNets)
     {
-<<<<<<< HEAD
-        hpwl += getNetHPWL(*net);
-=======
         const double w = timing_ ? timing_->weightOf(net) : 1.0;  // ★ 权重乘子
         hpwl += w * getNetHPWL(*net);
->>>>>>> daaadde10f (wrong timing)
     }
     return hpwl;
 }
@@ -259,10 +248,6 @@ double TierPlacer::getNetHPWL(const Net &n)
 void TierPlacer::updateWirelengthGradient()
 {
     zeroGradient(wirelengthGradient);
-<<<<<<< HEAD
-=======
-
->>>>>>> daaadde10f (wrong timing)
     if (gArg.CheckExist("LSE"))
     {
         for (auto net : db->dbNets)
@@ -274,10 +259,6 @@ void TierPlacer::updateWirelengthGradient()
     {
         // default to WA model
         updateDensityOverflow();
-<<<<<<< HEAD
-=======
-
->>>>>>> daaadde10f (wrong timing)
         // calculate inverted gamma
         invertedGamma = VECTOR_2D{1.0 / 8, 1.0 / 8};
         invertedGamma.x /= meshPerTier[0].getBinWidth();
@@ -295,12 +276,6 @@ void TierPlacer::updateWirelengthGradient()
             double exp = 1.0 / pow(10.0, (globalDensityOverflow - 0.1) * 20 / 9.0 - 1.0);
             invertedGamma *= exp;
         }
-<<<<<<< HEAD
-        vector<WAWirelengthGradientCache> cache(db->maxNetDegree);
-        for (auto net : db->dbNets)
-        {
-            addWAWirelengthGradientOneNet(*net, cache);
-=======
 
         // ★ 这里定义 cache，并在本作用域内使用
         std::vector<WAWirelengthGradientCache> cache(db->maxNetDegree);
@@ -309,19 +284,14 @@ void TierPlacer::updateWirelengthGradient()
         {
             const double w = timing_ ? timing_->weightOf(net) : 1.0; // ★ 时序权重
             addWAWirelengthGradientOneNet(*net, cache, w);           // ★ 改为 3 参版本
->>>>>>> daaadde10f (wrong timing)
         }
     }
 }
 
-<<<<<<< HEAD
-void TierPlacer::addWAWirelengthGradientOneNet(const Net &n, vector<WAWirelengthGradientCache> &cache)
-=======
 
 void TierPlacer::addWAWirelengthGradientOneNet(const Net &n,
     vector<WAWirelengthGradientCache> &cache,
     double net_weight)    
->>>>>>> daaadde10f (wrong timing)
 {
     cache.resize(n.netPins.size());
     // calculate pin position
@@ -381,12 +351,8 @@ void TierPlacer::addWAWirelengthGradientOneNet(const Net &n,
             ((curExpPositive + curExpPositiveDivideGamma * curPinVec) * denominatorPositive - curExpPositiveDivideGamma * numeratorPositive) / (denominatorPositive * denominatorPositive);
         VECTOR_2D &&curPinGradientNegativeTerm =
             ((curExpNegative - curExpNegativeDivideGamma * curPinVec) * denominatorNegative + curExpNegativeDivideGamma * numeratorNegative) / (denominatorNegative * denominatorNegative);
-<<<<<<< HEAD
-        curWirelengthGradient += (curPinGradientPositiveTerm - curPinGradientNegativeTerm);
-=======
             curWirelengthGradient += (curPinGradientPositiveTerm - curPinGradientNegativeTerm) * net_weight;
 
->>>>>>> daaadde10f (wrong timing)
     }
 }
 
@@ -671,13 +637,10 @@ void TierPlacer::place()
     };
     NesterovOptimizer opt(this, moveInside);
     opt.initialize();
-<<<<<<< HEAD
-=======
     if (timing_) {
         bool changed = timing_->timingIteration(modulePosition);
         (void)changed; // 暂时不触发预条件器重建
     }
->>>>>>> daaadde10f (wrong timing)
     double hpwl = totalHPWL();
     int iterCount = 0;
     printf("=== Start place optimization ===\n");
@@ -693,14 +656,11 @@ void TierPlacer::place()
     {
         
         opt.step();
-<<<<<<< HEAD
-=======
         if (timing_ && (iterCount > 0) && (iterCount % k_timing_ == 0)) {
             bool need_repc = timing_->timingIteration(modulePosition);
             // 如果以后有预条件器对象，可按 need_repc 决定是否重建
             // if (need_repc) rebuildPreconditioner();
         }
->>>>>>> daaadde10f (wrong timing)
         printf("\n");
         double newHpwl = totalHPWL();
         updatePenaltyFactor(hpwl, newHpwl);

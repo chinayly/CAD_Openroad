@@ -35,10 +35,14 @@ void Gpl3dInit(ord::OpenRoad* openroad,
   utl::Logger* logger)
 {
 Tcl_Interp* interp = openroad ? openroad->tclInterp() : nullptr;
+// 调试：打印初始化调用（便于排查命令是否被注册）
+fprintf(stderr, "Gpl3dInit: called (interp=%p, place_db=%p, dbsta=%p)\n",
+  static_cast<void*>(interp), static_cast<void*>(place_db), static_cast<void*>(dbsta));
 
 // 构造并持有 oracle（确保生命周期覆盖整个会话）
 static gpl3d::td::TimingOracle s_oracle(place_db, dbsta, logger);
 s_oracle.registerTcl(interp);  // ★ 注册 gpl3d::td::timing_iteration
+fprintf(stderr, "Gpl3dInit: TimingOracle::registerTcl invoked\n");
 
 // 你已有的其它命令注册...
 // Tcl_CreateObjCommand(interp, "gpl3d::import_place_db", ...);
