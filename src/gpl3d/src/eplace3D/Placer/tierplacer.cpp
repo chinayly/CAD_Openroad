@@ -10,6 +10,7 @@
 #include "topology.h"
 #include "DME.h"
 #include "td/TimingManager.h"
+
 TierPlacer::TierPlacer(PlaceDB *db, unordered_map<Module *, ModulePosition> &&position, double targetDensity)
     : targetDensity(targetDensity), modulePosition(position), db(db)
 {
@@ -657,7 +658,8 @@ void TierPlacer::place()
         
         opt.step();
         if (timing_ && (iterCount > 0) && (iterCount % k_timing_ == 0)) {
-            bool need_repc = timing_->timingIteration(modulePosition);
+            // 传递iteration编号，用于标注slack数据（用于AI训练）
+            bool need_repc = timing_->timingIteration(modulePosition, iterCount);
             // 如果以后有预条件器对象，可按 need_repc 决定是否重建
             // if (need_repc) rebuildPreconditioner();
         }

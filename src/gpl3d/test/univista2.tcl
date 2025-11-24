@@ -13,20 +13,37 @@ set ALL_LEFS {
   /home/testcase/pdk/lef/fakeram45_64x96.lef
   /home/testcase/pdk/lef/fakeram45_256x96.lef
   /home/testcase/pdk/lef/fakeram45_512x64.lef
+  /home/testcase/pdk/lef/fakeram45_1024x32.lef
+  /home/testcase/pdk/lef/fakeram45_2048x39.lef
+  /home/testcase/pdk/lef/fakeram45_256x16.lef
+  /home/testcase/pdk/lef/fakeram45_256x34.lef
+  /home/testcase/pdk/lef/fakeram45_256x95.lef
+  /home/testcase/pdk/lef/fakeram45_64x15.lef
+  /home/testcase/pdk/lef/fakeram45_64x21.lef
+  /home/testcase/pdk/lef/fakeram45_64x32.lef
 }
-set ALL_DEFS { /home/testcase/Public/public_case1/input.def }
+set ALL_DEFS { /home/testcase/Public/public_case2/input.def }
 set LATE_LIBS {
   /home/testcase/pdk/lib/NangateOpenCellLibrary_typical.lib
+  /home/testcase/pdk/lib/fakeram45_32x64.lib
+  /home/testcase/pdk/lib/fakeram45_64x7.lib
   /home/testcase/pdk/lib/fakeram45_64x96.lib
   /home/testcase/pdk/lib/fakeram45_256x96.lib
   /home/testcase/pdk/lib/fakeram45_512x64.lib
-  /home/testcase/pdk/lib/fakeram45_64x7.lib
+  /home/testcase/pdk/lib/fakeram45_1024x32.lib
+  /home/testcase/pdk/lib/fakeram45_2048x39.lib
+  /home/testcase/pdk/lib/fakeram45_256x16.lib
+  /home/testcase/pdk/lib/fakeram45_256x34.lib
+  /home/testcase/pdk/lib/fakeram45_256x95.lib
+  /home/testcase/pdk/lib/fakeram45_64x15.lib
+  /home/testcase/pdk/lib/fakeram45_64x21.lib
+  /home/testcase/pdk/lib/fakeram45_64x32.lib
 }
 
 set design "top"
 set top_design "top"
-set netlist "/home/testcase/Public/public_case1/input.v"
-set sdc     "/home/testcase/Public/public_case1/input.sdc"
+set netlist "/home/testcase/Public/public_case2/input.v"
+set sdc     "/home/testcase/Public/public_case2/input.sdc"
 
 # ===================== 单位（与库一致；在 read_liberty 前） =====================
 set_units -time ns -capacitance ff -resistance kohm -voltage V -current mA -distance um
@@ -167,7 +184,7 @@ proc timing_iter_and_feedback {{tag ""}} {
 puts "Start placer3d"
 
 # Debug 开关
-set_debug_level GPL3D "run" 0
+set_debug_level GPL3D "run" 1
 set_debug_level PAR "initial_partitioning" 1
 set_debug_level PAR "multilevel_partitioning" 1
 set_debug_level PAR "v_cycle_refinement" 1
@@ -195,7 +212,7 @@ gpl3d::placer3d_run
 timing_iter_and_feedback POST1
 timing_iter_and_feedback POST2
 
-report_net  rof1_0__core/fe/bp_fe_pc_gen_1/_0582_
-
-report_net  rof1_0__core/fe_cmd_fifo.mem_1r1w.r_v_i
+# 注释掉：这些网络名称是针对 public_case1 的，在 public_case2 中可能不存在
+# report_net  rof1_0__core/fe/bp_fe_pc_gen_1/_0582_
+# report_net  rof1_0__core/fe_cmd_fifo.mem_1r1w.r_v_i
 

@@ -31,8 +31,21 @@ void RCTreeBuilder3D::updateFromPlacement(const std::unordered_map<Module*, Modu
   if (!pdb_) return;
 
   // 遍历全部 nets，构建 TSV（以及可选 2D）模型
+  // 过滤：只处理有效的 nets（至少有 2 个 pin，且这些 pin 的 module 都有位置）
   for (Net* n : pdb_->dbNets) {
     if (!n || n->netPins.empty()) continue;
+    
+    // 检查 net 是否有足够的有效 pins（至少 2 个，且它们的 module 都有位置）
+    int valid_pin_count = 0;
+    for (Pin* p : n->netPins) {
+      if (p && p->module && module_pos.find(p->module) != module_pos.end()) {
+        valid_pin_count++;
+      }
+    }
+    
+    // 只有至少 2 个有效 pin 的 net 才构建模型
+    if (valid_pin_count < 2) continue;
+    
     buildOneNet_(n, module_pos);
   }
 

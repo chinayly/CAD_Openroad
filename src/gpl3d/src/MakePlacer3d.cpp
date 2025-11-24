@@ -4,10 +4,26 @@
 #include "ord/OpenRoad.hh"
 #include "gpl3d/Placer3d.h"
 #include "utl/decode.h"
+#include "gpl3d/parser_odb.h"
+#include "placedb.h"
+
+// 前向声明
+namespace sta {
+    class dbSta;
+}
+namespace utl {
+    class Logger;
+}
 
 namespace gpl3d{
     // Tcl files encoded into strings.
     extern const char* gpl3d_tcl_inits[];
+    
+    // 函数声明
+    void Gpl3dInit(ord::OpenRoad* openroad,
+                   PlaceDB* place_db,
+                   sta::dbSta* dbsta,
+                   utl::Logger* logger);
 } // namespace gpl3d
 
 extern "C" {
@@ -39,6 +55,11 @@ void initPlacer3d(OpenRoad* openroad)
                  openroad->getDbNetwork(),
                  openroad->getSta(),
                  openroad->getLogger());
+
+    // 初始化 TimingOracle 的 TCL 命令
+    // 创建一个临时的 PlaceDB 用于初始化（实际会在 run() 中重新创建）
+    static PlaceDB temp_pdb;
+    gpl3d::Gpl3dInit(openroad, &temp_pdb, openroad->getSta(), openroad->getLogger());
 
     // Ensure native C++ initialization that registers runtime Tcl hooks
     // (e.g. gpl3d::td::timing_iteration) is invoked. Some registration

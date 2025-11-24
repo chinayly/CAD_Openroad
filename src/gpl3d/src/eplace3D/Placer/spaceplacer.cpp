@@ -278,13 +278,14 @@ vector<double> SpacePlacer::getGradient()
 {
     double dentime = 0.0;
     double wiretime = 0.0;
-    time_start(&dentime);
+    // 注释掉时间测量和打印以提高性能
+    // time_start(&dentime);
     updateDensityGradient();
-    time_end(&dentime);
-    time_start(&wiretime);
+    // time_end(&dentime);
+    // time_start(&wiretime);
     updateWirelengthGradient();
-    time_end(&wiretime);        
-    printf("Density Gradient Time: %f, Wirelength Gradient Time: %f\n", dentime, wiretime);
+    // time_end(&wiretime);        
+    // printf("Density Gradient Time: %f, Wirelength Gradient Time: %f\n", dentime, wiretime);
 
     vector<double> gradient;
     gradient.reserve(freeNodes.size() * 3);
@@ -1416,7 +1417,9 @@ void SpacePlacer::UpdatePartitionDatabase(
 
         if (first == last)
         {
-            newNets.push_back(new Net(*origNet));
+            Net* singleNet = new Net(*origNet);
+            singleNet->originalNetName = origNet->name;  // 确保原始名称正确
+            newNets.push_back(singleNet);
             continue;
         }
 
@@ -1439,6 +1442,7 @@ void SpacePlacer::UpdatePartitionDatabase(
             if (!layerPins[k].empty())
             {
                 Net *down = new Net(base + "_DN", layerPins[k]);
+                down->originalNetName = origNet->name;  // 记录原始 net 名称
                 down->addPin(new Pin(tsv, POS_2D{0, 0}, PIN_DIRECTION_OUT));
                 newNets.push_back(down);
             }
@@ -1446,6 +1450,7 @@ void SpacePlacer::UpdatePartitionDatabase(
             if (!layerPins[k + 1].empty())
             {
                 Net *up = new Net(base + "_UP", vector<Pin *>());
+                up->originalNetName = origNet->name;  // 记录原始 net 名称
                 up->addPin(new Pin(tsv, POS_2D{0, 0}, PIN_DIRECTION_IN));
                 for (Pin *p : layerPins[k + 1])
                     up->addPin(p);
@@ -1456,6 +1461,7 @@ void SpacePlacer::UpdatePartitionDatabase(
             {
                 std::string linkName = base + "_LINK_" + std::to_string(k - 1) + "_" + std::to_string(k);
                 Net *link = new Net(base + "_LINK", vector<Pin *>());
+                link->originalNetName = origNet->name;  // 记录原始 net 名称
                 link->addPin(new Pin(previousTSV, POS_2D{0, 0}, PIN_DIRECTION_OUT));
                 link->addPin(new Pin(tsv, POS_2D{0, 0}, PIN_DIRECTION_IN));
                 newNets.push_back(link);

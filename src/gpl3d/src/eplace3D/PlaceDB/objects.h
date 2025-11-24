@@ -19,12 +19,18 @@ class Net
 {
 public:
     Net() = default;
-    Net(string name, vector<Pin *> pins) : name(name), netPins(pins) {}
+    Net(string name, vector<Pin *> pins) : name(name), netPins(pins), originalNetName(name) {}
     vector<Pin *> netPins;
     string name;
+    string originalNetName;  // 原始 net 名称（用于记录分割前的完整 net 名称）
     void addPin(Pin *);
     int getPinCount();
     // void allocateMemoryForPin(int);
+    
+    // 时序相关字段（用于AI训练数据标注）
+    double slack = 0.0;              // 该net的worst slack（纳秒）
+    int iteration = -1;                // 记录slack来自哪个iteration
+    bool slack_valid = false;          // slack是否有效
 };
 
 enum PinDirection

@@ -6,6 +6,7 @@ add_library(gpl3d_td
   ParasiticsInjector.cpp
   TimingOracle.cpp
   NetWeightScheduler.cpp
+  TSVNetMapper.cpp
 )
 
 # 公开头文件根目录：让  #include "td/xxx.h"  能被找到
@@ -37,6 +38,8 @@ target_link_libraries(gpl3d_td
     utl_lib
     par
     PlaceDB
+    stt_lib        # Steiner tree builder
+    odb            # OpenDB for dbDatabase
 )
 # 如果你的工程是静态链接并且需要位置无关代码，可取消注释
 # set_target_properties(gpl3d_td PROPERTIES POSITION_INDEPENDENT_CODE ON)

@@ -1,5 +1,8 @@
 #pragma once
 #include "placedb.h"
+#include "td/TimingManager.h"
+#include <memory>
+
 namespace odb {
 class dbDatabase;
 class dbInst;
@@ -35,7 +38,7 @@ class Placer3d
   sta::dbNetwork* db_network_ = nullptr;
   sta::dbSta* sta_ = nullptr;
   utl::Logger* logger_ = nullptr;
-  
+  std::unique_ptr<td::TimingManager> timing_;  // 保持 TimingManager 的生命周期
 };
 
 }  // namespace gpl3d

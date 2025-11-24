@@ -6,9 +6,12 @@
 #include "sta/Sta.hh"
 #include "sta/MinMax.hh"
 #include "sta/Units.hh"
+#include "sta/Network.hh"
+#include "placedb.h"
 
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include "tcl.h"  // 注意用双引号
 
 namespace gpl3d::td {
@@ -23,7 +26,7 @@ static double to_ns(double v_seconds)
   return v_seconds * 1e9;
 }
 
-StaSummary TimingOracle::updateAndReport(bool compute_hold)
+StaSummary TimingOracle::updateAndReport(bool compute_hold, int iteration)
 {
   StaSummary out{};
   out.WNS_setup = 0.0;
@@ -91,8 +94,146 @@ StaSummary TimingOracle::updateAndReport(bool compute_hold)
     }
   }
 
+  // 计算每个 net 的 criticality 和 slack（用于AI训练数据标注）
+  // 如果 WNS 异常，跳过 criticality 计算（避免使用异常值）
   net_crit_.clear();
+  net_slack_map_.clear();
+  if (sane(out.WNS_setup)) {
+    computeNetCriticalities(s, out.WNS_setup, iteration);
+  } else {
+    if (logger_) {
+      logger_->warn(utl::GPL3D, 0,
+        "TimingOracle: WNS is abnormal ({} ns), skipping criticality computation.",
+        out.WNS_setup);
+    }
+  }
+
   return out;
+}
+
+void TimingOracle::computeNetCriticalities(sta::Sta* s, double wns_setup, int iteration)
+{
+  if (!pdb_ || !s) return;
+
+  sta::Network* network = s->network();
+  if (!network) return;
+
+  // 检查 WNS 是否异常
+  auto sane = [](double v)->bool {
+    return std::isfinite(v) && std::fabs(v) < 1e12; // ns 量级保护
+  };
+  
+  const double MAX_VALID_SLACK_NS = 1e6;  // 1ms，足够大的正常值
+  
+  // 如果 WNS 本身异常，直接返回（不应该发生，因为调用前已检查）
+  if (!sane(wns_setup) || std::fabs(wns_setup) > MAX_VALID_SLACK_NS) {
+    if (logger_) {
+      logger_->warn(utl::GPL3D, 0,
+        "TimingOracle::computeNetCriticalities: WNS is abnormal ({} ns), skipping.",
+        wns_setup);
+    }
+    return;
+  }
+
+  const sta::MinMax* max_m = sta::MinMax::max();
+  const double wns_abs = std::fabs(wns_setup);
+  const double denom = wns_abs + 1e-9;  // CRIT_EPS
+
+  int nets_with_slack = 0;
+
+  // 遍历 PlaceDB 中的所有 nets
+  for (Net* pdb_net : pdb_->dbNets) {
+    if (!pdb_net) continue;
+
+    // 在 STA Network 中查找对应的 net
+    const char* net_name = pdb_net->name.c_str();
+    sta::Net* sta_net = network->findNet(net_name);
+    if (!sta_net) continue;
+
+    // 过滤：跳过 power/ground nets
+    if (network->isPower(sta_net) || network->isGround(sta_net)) {
+      continue;
+    }
+
+    // 过滤：检查 net 是否有 driver 和 load（孤立 cell 的 net 可能没有）
+    // 注意：drivers() 返回的 PinSet* 由 Network 管理，不应手动释放
+    sta::PinSet* drivers = network->drivers(sta_net);
+    bool has_driver = (drivers && !drivers->empty());
+    bool has_load = false;
+    
+    // 检查是否有 load pin
+    std::unique_ptr<sta::NetConnectedPinIterator> pin_iter_check{
+        network->connectedPinIterator(sta_net)};
+    while (pin_iter_check->hasNext()) {
+      const sta::Pin* pin = pin_iter_check->next();
+      if (network->isLoad(pin)) {
+        has_load = true;
+        break;
+      }
+    }
+    
+    // 跳过没有 driver 或没有 load 的 net（可能是孤立 cell）
+    if (!has_driver || !has_load) {
+      continue;
+    }
+
+    // 获取该 net 的最差 slack（遍历所有连接到该 net 的 pins）
+    double worst_slack = std::numeric_limits<double>::max();
+    bool found_slack = false;
+
+    std::unique_ptr<sta::NetConnectedPinIterator> pin_iter{
+        network->connectedPinIterator(sta_net)};
+    while (pin_iter->hasNext()) {
+      const sta::Pin* pin = pin_iter->next();
+      sta::Slack slack = s->pinSlack(pin, max_m);
+      if (slack != sta::INF) {
+        double slack_ns = to_ns(static_cast<double>(slack));
+        // 过滤异常值：如果 slack 绝对值过大，认为是无效的（可能是孤立 cell 导致的）
+        if (std::fabs(slack_ns) < MAX_VALID_SLACK_NS) {
+          if (slack_ns < worst_slack) {
+            worst_slack = slack_ns;
+            found_slack = true;
+          }
+        }
+      }
+    }
+
+    // 存储slack值到Net对象和映射表（用于AI训练数据标注）
+    if (found_slack) {
+      pdb_net->slack = worst_slack;
+      pdb_net->iteration = iteration;
+      pdb_net->slack_valid = true;
+      net_slack_map_[pdb_net] = worst_slack;
+      ++nets_with_slack;
+    } else {
+      // 如果没有找到有效的slack，标记为无效
+      pdb_net->slack_valid = false;
+    }
+
+    // 计算 criticality: 如果 slack < 0，则 criticality = (-slack) / (|WNS| + eps)
+    if (found_slack && worst_slack < 0.0) {
+      double crit = (-worst_slack) / denom;
+      crit = std::min(crit, 1.0);  // 限制在 [0, 1]
+      net_crit_[pdb_net] = crit;
+    } else {
+      // slack >= 0 的 net，criticality = 0（不存储，默认就是 0）
+    }
+  }
+
+  if (logger_) {
+    logger_->info(utl::GPL3D, 0,
+      "Computed criticalities for {} nets, labeled slack for {} nets (WNS={:.3f} ns, iteration={}).",
+      net_crit_.size(), nets_with_slack, wns_setup, iteration);
+  }
+}
+
+double TimingOracle::getNetSlack(const ::Net* net) const
+{
+  auto it = net_slack_map_.find(net);
+  if (it != net_slack_map_.end()) {
+    return it->second;
+  }
+  return 0.0;  // 默认返回0（表示没有slack信息或slack >= 0）
 }
 
 // ---------------- Tcl hook ----------------
