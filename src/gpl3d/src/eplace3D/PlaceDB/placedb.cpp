@@ -125,6 +125,8 @@ void PlaceDB::convertTo3d(std::size_t numTiers)
     }
     printf("areaExpandFactor:%f\n",areaExpandFactor);
     double coreRegionAreaPerTier = coreRegionArea / numTiers * areaExpandFactor * areaExpandFactor;
+    coreRegionAreaPerTier = std::max(coreRegionAreaPerTier, 100.0);
+
     std::size_t numRowsPerTier = static_cast<std::size_t>(ceil(numRows / sqrt(numTiers) * areaExpandFactor));
     double rowWidth = ceil(coreRegionAreaPerTier / numRowsPerTier / commonRowHeight);
     // this assumes the siteWidth of all rows are the same

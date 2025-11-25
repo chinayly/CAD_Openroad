@@ -216,6 +216,9 @@ class TierPlacer : DifferentiableFunction
   void outputFFsByTier(size_t tierId);
 
   void finishTierPlacer(int iterCount);
+  
+  // 同步位置回 OpenROAD 数据库
+  void syncPositionsToOpenROAD();
 
   void legalandDP();
 };

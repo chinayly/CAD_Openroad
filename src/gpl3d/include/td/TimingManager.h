@@ -91,6 +91,12 @@ class TimingManager
   void setWeightsFromDict(const std::unordered_map<std::string, double>& net_weights, PlaceDB* pdb);
 
  private:
+  // 同步模块位置到 OpenROAD 数据库（私有辅助函数）
+  void syncPositionsToOpenROAD(const ModulePosMap& module_pos);
+  
+  // 更新寄生参数（基于新位置）
+  void updateParasitics();
+  
   PlaceDB* pdb_{nullptr};
   ord::OpenRoad* ord_{nullptr};
   sta::dbSta*    sta_{nullptr}; 

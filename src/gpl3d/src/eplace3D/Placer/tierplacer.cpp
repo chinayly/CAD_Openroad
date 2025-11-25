@@ -10,6 +10,9 @@
 #include "topology.h"
 #include "DME.h"
 #include "td/TimingManager.h"
+#include "gpl3d/parser_odb.h"
+#include "ord/OpenRoad.hh"
+#include "odb/db.h"
 
 TierPlacer::TierPlacer(PlaceDB *db, unordered_map<Module *, ModulePosition> &&position, double targetDensity)
     : targetDensity(targetDensity), modulePosition(position), db(db)
@@ -446,6 +449,11 @@ void TierPlacer::updateDensityOverflow()
 {
     double totalOverflowArea = 0;
     densityOverflowPerTier.resize(numTiers);
+    // 确保 stopConditionPerTier 已初始化（可能在构造函数中调用时还未初始化）
+    if (stopConditionPerTier.size() != numTiers)
+    {
+        stopConditionPerTier.resize(numTiers, false);
+    }
     for (size_t tierId = 0; tierId < numTiers; tierId++)
     {
         double binArea = meshPerTier[tierId].getBinArea();
@@ -1606,6 +1614,9 @@ void TierPlacer::finishTierPlacer(int iterCount)
         //                                 modulePosition[m].position.x, 
         //                                 modulePosition[m].position.y);
     }
+    
+    // 同步位置回 OpenROAD 数据库，以便 POST1/POST2 的时序分析使用新位置
+    syncPositionsToOpenROAD();
 
     printf("\n\n\nTP-place clk aware time: %.2f \n\n\n", clkawareTime);
 
@@ -1614,6 +1625,72 @@ void TierPlacer::finishTierPlacer(int iterCount)
     // 输出最终的布局结果bookshelf format
     // outputBookShelfByTier("lgdp", false);
         
+}
+
+void TierPlacer::syncPositionsToOpenROAD()
+{
+    // 获取 OpenROAD 实例和数据库
+    ord::OpenRoad* openroad = ord::OpenRoad::openRoad();
+    if (!openroad) {
+        printf("WARNING: Cannot get OpenROAD instance, skipping position sync.\n");
+        return;
+    }
+    
+    odb::dbDatabase* odb_db = openroad->getDb();
+    if (!odb_db) {
+        printf("WARNING: Cannot get OpenROAD database, skipping position sync.\n");
+        return;
+    }
+    
+    // 获取 parser 的 module-inst 映射
+    parser::OpenRoadParser* parser = parser::getOpenRoadParser();
+    const auto& module_inst_map = parser->moduleInstMap();
+    
+    // 获取 DBU 转换因子
+    odb::dbBlock* blk = odb_db->getChip()->getBlock();
+    if (!blk) {
+        printf("WARNING: Cannot get block, skipping position sync.\n");
+        return;
+    }
+    const int dbu_per_micron = blk->getDbUnitsPerMicron();
+    
+    // 同步每个模块的位置
+    int synced_count = 0;
+    for (Module *m : db->dbModules) {
+        if (!modulePosition.contains(m)) {
+            continue;
+        }
+        
+        auto it = module_inst_map.find(m);
+        if (it == module_inst_map.end()) {
+            continue;  // 可能是 filler 或其他不在 OpenROAD 中的模块
+        }
+        
+        odb::dbInst* inst = it->second;
+        if (!inst) {
+            continue;
+        }
+        
+        // 跳过固定模块
+        if (inst->getPlacementStatus().isFixed()) {
+            continue;
+        }
+        
+        // 获取新位置（中心坐标，单位：微米）
+        const ModulePosition& pos = modulePosition[m];
+        double cx_um = pos.position.x;
+        double cy_um = pos.position.y;
+        
+        // 转换为 DBU（左下角坐标）
+        int llx_dbu = static_cast<int>((cx_um - m->width / 2.0) * dbu_per_micron);
+        int lly_dbu = static_cast<int>((cy_um - m->height / 2.0) * dbu_per_micron);
+        
+        // 更新 OpenROAD 数据库中的位置
+        inst->setLocation(llx_dbu, lly_dbu);
+        synced_count++;
+    }
+    
+    printf("Synced %d module positions to OpenROAD database.\n", synced_count);
 }
 
 double TierPlacer::clkWLPerTier(int tierId)

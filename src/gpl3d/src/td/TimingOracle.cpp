@@ -45,7 +45,11 @@ StaSummary TimingOracle::updateAndReport(bool compute_hold, int iteration)
   }
 
   // 更新一次时序（Tcl侧需先 set_wire_rc / estimate_parasitics -placement）
-  s->updateTiming(false /*force*/);
+  // ★ 关键：由于寄生参数已更新，需要强制重新计算所有时序
+  // 先使延迟和到达时间失效，然后强制更新
+  s->delaysInvalid();
+  s->arrivalsInvalid();
+  s->updateTiming(true /*force full update*/);
 
   // ---- setup (max) ----
   {
